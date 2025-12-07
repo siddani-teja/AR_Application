@@ -1,0 +1,12 @@
+body{
+    background-color: antiquewhite;
+}
+
+.cards
+{
+    padding: 100px 50px;
+    display: flex;
+    justify-content: start;
+    gap: 20px;
+    background-color: blue;
+}
