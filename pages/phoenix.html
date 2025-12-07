@@ -1,141 +1,139 @@
 <!doctype html>
 <html>
-  <head>
-    <title>Interactive AR Model with Controls</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-    <script src="https://raw.githack.com/donmccurdy/aframe-extras/master/dist/aframe-extras.loaders.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-detector.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-handler.js"></script>
+<head>
+<title>Interactive AR Model with Controls</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+<script src="https://unpkg.com/aframe-ar/dist/aframe-ar.min.js"></script>
+<script src="https://raw.githack.com/donmccurdy/aframe-extras/master/dist/aframe-extras.loaders.min.js"></script>
+<script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-detector.js"></script>
+<script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-handler.js"></script>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-      .a-scene-container {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-      }
-      body {
-        margin: 0;
-        overflow: hidden;
-      }
-    </style>
-  </head>
+<style>
+ .a-scene-container {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+ }
+ body {
+margin: 0;
+overflow: hidden;
+ }
+</style>
+ </head>
 
-  <body class="bg-gray-900 font-sans antialiased">
-    <div class="a-scene-container">
-      <a-scene
-        vr-mode-ui="enabled: false;"
-        loading-screen="enabled: false;"
-        renderer="logarithmicDepthBuffer: true;"
-        arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
-        id="scene"
-        embedded
-        gesture-detector
-      >
+ <body class="bg-gray-900 font-sans antialiased">
+<div class="a-scene-container">
+ <a-scene
+vr-mode-ui="enabled: false;"
+loading-screen="enabled: false;"
+renderer="logarithmicDepthBuffer: true;"
+**arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false; cameraParametersUrl: assets/camera_para.dat;"**
+id="scene"
+embedded
+gesture-detector
+ >
 
-        <a-assets>
-          <a-asset-item
-            id="animated-asset"
-            src="assets/pheonix.gltf"
-          ></a-asset-item>
-        </a-assets>
+<a-assets>
+ <a-asset-item
+id="animated-asset"
+src="assets/pheonix.gltf"
+ ></a-asset-item>
+</a-assets>
 
-        <a-marker
-          id="animated-marker"
-          type="pattern"
-          preset="custom"
-          url="assets/marker.patt"
-          raycaster="objects: .clickable"
-          emitevents="true"
-          cursor="fuse: false; rayOrigin: mouse;"
-        >
-          <a-entity
-            id="ar-model"
-            scale="0.002 0.002 0.002"
-            rotation="0 0 0"
-            animation-mixer="clip: *; loop: repeat; timeScale: 1"
-            gltf-model="#animated-asset"
-            class="clickable"
-            gesture-handler
-          ></a-entity>
-        </a-marker>
+<a-marker
+ id="animated-marker"
+ type="pattern"
+ preset="custom"
+ url="assets/marker.patt"
+ raycaster="objects: .clickable"
+ emitevents="true"
+ cursor="fuse: false; rayOrigin: mouse;"
+>
+ <a-entity
+id="ar-model"
+scale="0.002 0.002 0.002"
+rotation="0 0 0"
+animation-mixer="clip: *; loop: repeat; timeScale: 1"
+gltf-model="#animated-asset"
+class="clickable"
+gesture-handler
+ ></a-entity>
+</a-marker>
 
-        <a-entity camera></a-entity>
-      </a-scene>
-    </div>
+<a-entity camera></a-entity>
+ </a-scene>
+</div>
 
-    <div class="absolute bottom-4 left-0 w-full z-50 flex justify-center space-x-4 p-4">
-      <!-- Animation Toggle Button -->
-      <button
-        id="animation-toggle-btn"
-        class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-xl shadow-2xl transition duration-200 ease-in-out transform hover:scale-105"
-      >
-        PAUSE Animation
-      </button>
-    </div>
+<div class="absolute bottom-4 left-0 w-full z-50 flex justify-center space-x-4 p-4">
+<button
+id="animation-toggle-btn"
+class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-xl shadow-2xl transition duration-200 ease-in-out transform hover:scale-105"
+ >
+PAUSE Animation
+ </button>
+</div>
 
-    <!-- Custom JavaScript for interactivity -->
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const scene = document.querySelector("#scene");
-        const animationButton = document.querySelector("#animation-toggle-btn");
+<script>
+ document.addEventListener("DOMContentLoaded", () => {
+const scene = document.querySelector("#scene");
+const animationButton = document.querySelector("#animation-toggle-btn");
 
-        let isPaused = false;
+let isPaused = false;
 
-        // Wait for the A-Frame scene to be fully loaded
-        scene.addEventListener("loaded", () => {
-          console.log("A-Frame Scene is loaded. Attaching interactivity handlers.");
+// Wait for the A-Frame scene to be fully loaded
+scene.addEventListener("loaded", () => {
+ console.log("A-Frame Scene is loaded. Attaching interactivity handlers.");
 
-          const model = document.querySelector("#ar-model");
+ const model = document.querySelector("#ar-model");
 
-          // Ensure initial scale
-          model.setAttribute("scale", "0.002 0.002 0.002");
+ // Ensure initial scale
+ model.setAttribute("scale", "0.002 0.002 0.002");
 
-          // Get current rotation and rotate along X-axis
-          const currentRotation = model.getAttribute("rotation") || {
-            x: 0,
-            y: 0,
-            z: 0,
-          };
+ // Get current rotation and rotate along X-axis
+ const currentRotation = model.getAttribute("rotation") || {
+x: 0,
+y: 0,
+z: 0,
+ };
 
-          // Rotate by +270 degrees on X axis
-          model.setAttribute("rotation", {
-            x: (currentRotation.x + 270) % 360,
-            y: currentRotation.y,
-            z: currentRotation.z,
-          });
+ // Rotate by +270 degrees on X axis
+ model.setAttribute("rotation", {
+x: (currentRotation.x + 270) % 360,
+y: currentRotation.y,
+z: currentRotation.z,
+ });
 
-          // --- Animation Toggle Logic ---
-          animationButton.addEventListener("click", () => {
-            isPaused = !isPaused;
+ // --- Animation Toggle Logic ---
+ animationButton.addEventListener("click", () => {
+isPaused = !isPaused;
 
-            if (isPaused) {
-              // Pause the animation
-              model.setAttribute("animation-mixer", "timeScale: 0");
-              animationButton.textContent = "PLAY Animation";
-              animationButton.classList.replace("bg-indigo-600", "bg-green-600");
-              animationButton.classList.replace(
-                "hover:bg-indigo-700",
-                "hover:bg-green-700"
-              );
-            } else {
-              // Resume the animation
-              model.setAttribute("animation-mixer", "timeScale: 1");
-              animationButton.textContent = "PAUSE Animation";
-              animationButton.classList.replace("bg-green-600", "bg-indigo-600");
-              animationButton.classList.replace(
-                "hover:bg-green-700",
-                "hover:bg-indigo-700"
-              );
-            }
-          });
-        });
-      });
-    </script>
-  </body>
+if (isPaused) {
+ // Pause the animation
+ model.setAttribute("animation-mixer", "timeScale: 0");
+ animationButton.textContent = "PLAY Animation";
+ animationButton.classList.replace("bg-indigo-600", "bg-green-600");
+ animationButton.classList.replace(
+"hover:bg-indigo-700",
+"hover:bg-green-700"
+ );
+} else {
+ // Resume the animation
+ model.setAttribute("animation-mixer", "timeScale: 1");
+ animationButton.textContent = "PAUSE Animation";
+ animationButton.classList.replace("bg-green-600", "bg-indigo-600");
+ animationButton.classList.replace(
+"hover:bg-green-700",
+"hover:bg-indigo-700"
+ );
+}
+ });
+});
+ });
+</script>
+ </body>
 </html>
