@@ -6,6 +6,20 @@
     <script src="https://raw.githack.com/donmccurdy/aframe-extras/master/dist/aframe-extras.loaders.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-detector.js"></script>
     <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-handler.js"></script>
+    <style>
+    /* This targets the video element created by AR.js */
+    video {
+      object-fit: contain !important; /* Forces the video to fit inside the container, preventing cropping/zooming. */
+      width: 100% !important;
+      height: 100% !important;
+    }
+    /* Ensure the scene itself fills the screen */
+    #scene {
+        width: 100vw;
+        height: 100vh;
+    }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   </head>
   <body style="margin: 0; overflow: hidden">
     <button
